@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div id="main">
+    <Modal :isOpen="modalIsopen" @close-modal="onModalClose">My Modal</Modal>
     <img alt="Vue logo" src="./assets/logo.png" />
-    <!-- <h1>{{ count }}</h1>
+    <button @click="openModal">OpenModal</button>
+    <h1>{{ count }}</h1>
     <h1>{{ double }}</h1>
     <button @click="increase">+1</button>
     <h1>{{ name }}</h1>
@@ -11,9 +13,9 @@
     <h1>{{ y }}</h1>
     <ul>
       <li v-for="item in numbers" :key="item">{{ item }}</li>
-    </ul> -->
+    </ul>
     <h1 v-if="loading">Loading...</h1>
-    <img v-if="loaded" :src="result.message" alt="" />
+    <img v-if="loaded" :src="result[0].url" alt="" />
   </div>
 </template>
 
@@ -21,6 +23,7 @@
 import { computed, defineComponent, reactive, ref, toRefs, watch } from 'vue'
 import useMouseLocation from './hook/useMouseLocation'
 import useURLLoader from './hook/useURLLoader'
+import Modal from './components/Modal.vue'
 
 interface Info {
   name: string
@@ -66,6 +69,14 @@ export default defineComponent({
     const { result, loading, loaded } = useURLLoader<Cattype[]>(
       'https://api.thecatapi.com/v1/images/search?limit=1'
     )
+
+    const modalIsopen = ref<boolean>(false)
+    const openModal = () => {
+      modalIsopen.value = true
+    }
+    const onModalClose = () => {
+      modalIsopen.value = false
+    }
     // watch必须是一个响应式对象，比如indo.name是一个string类型，不是响应式对象，就不能作为一个监视源
     watch([count, () => info.name], (newValue, oldValue) => {
       document.title = newValue
@@ -81,8 +92,14 @@ export default defineComponent({
       ...toRefs(xy),
       result,
       loading,
-      loaded
+      loaded,
+      openModal,
+      onModalClose,
+      modalIsopen
     }
+  },
+  components: {
+    Modal
   }
 })
 </script>
