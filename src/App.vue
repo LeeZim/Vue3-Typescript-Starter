@@ -2,6 +2,23 @@
   <div id="main">
     <Modal :isOpen="modalIsopen" @close-modal="onModalClose">My Modal</Modal>
     <img alt="Vue logo" src="./assets/logo.png" />
+    <Suspense>
+      <template #default>
+        <AsyncShow />
+      </template>
+      <template #fallback>
+        <h1>loading</h1>
+      </template>
+    </Suspense>
+    <Suspense>
+      <template #default>
+        <DogShow />
+      </template>
+      <template #fallback>
+        <h1>Dog Loading</h1>
+      </template>
+    </Suspense>
+    <h1>{{ error }}</h1>
     <button @click="openModal">OpenModal</button>
     <h1>{{ count }}</h1>
     <h1>{{ double }}</h1>
@@ -20,10 +37,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, toRefs, watch } from 'vue'
+import { computed, defineComponent, onErrorCaptured, reactive, ref, toRefs, watch } from 'vue'
 import useMouseLocation from './hook/useMouseLocation'
 import useURLLoader from './hook/useURLLoader'
 import Modal from './components/Modal.vue'
+import AsyncShow from './components/AsyncShow.vue'
+import DogShow from './components/DogShow.vue'
 
 interface Info {
   name: string
@@ -48,6 +67,11 @@ interface Cattype {
 export default defineComponent({
   name: 'App',
   setup() {
+    const error = ref(null)
+    onErrorCaptured((e: any) => {
+      error.value = e
+      return true
+    })
     const count = ref<number>(0)
     const double: Number = computed(() => {
       return count.value * 2
@@ -95,11 +119,14 @@ export default defineComponent({
       loaded,
       openModal,
       onModalClose,
-      modalIsopen
+      modalIsopen,
+      error
     }
   },
   components: {
-    Modal
+    Modal,
+    AsyncShow,
+    DogShow
   }
 })
 </script>
