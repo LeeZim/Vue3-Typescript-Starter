@@ -1,22 +1,91 @@
 <template>
   <div>
     <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Hello Vue 3 + TypeScript + Vitee" />
+    <!-- <h1>{{ count }}</h1>
+    <h1>{{ double }}</h1>
+    <button @click="increase">+1</button>
+    <h1>{{ name }}</h1>
+    <h1>{{ age }}</h1>
+    <button @click="reName">重命名</button>
+    <h1>{{ x }}</h1>
+    <h1>{{ y }}</h1>
+    <ul>
+      <li v-for="item in numbers" :key="item">{{ item }}</li>
+    </ul> -->
+    <h1 v-if="loading">Loading...</h1>
+    <img v-if="loaded" :src="result.message" alt="" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import { computed, defineComponent, reactive, ref, toRefs, watch } from 'vue'
+import useMouseLocation from './hook/useMouseLocation'
+import useURLLoader from './hook/useURLLoader'
+
+interface Info {
+  name: string
+  age: number
+  numbers: number[]
+  reName: () => void
+}
+// eslint-disable-next-line
+interface Dogtype {
+  message: string
+  statue: string
+}
+
+interface Cattype {
+  breeds: string
+  id: string
+  url: string
+  width: number
+  height: number
+}
 
 export default defineComponent({
   name: 'App',
-  components: {
-    HelloWorld
+  setup() {
+    const count = ref<number>(0)
+    const double: Number = computed(() => {
+      return count.value * 2
+    })
+    const increase = () => {
+      count.value += 1
+    }
+    const xy = reactive(useMouseLocation())
+    const info = reactive<Info>({
+      name: '小明',
+      age: 18,
+      numbers: [],
+      reName: () => {
+        info.name = '小红'
+        count.value += 1
+        console.log(info.name)
+      }
+    })
+    const { result, loading, loaded } = useURLLoader<Cattype[]>(
+      'https://api.thecatapi.com/v1/images/search?limit=1'
+    )
+    // watch必须是一个响应式对象，比如indo.name是一个string类型，不是响应式对象，就不能作为一个监视源
+    watch([count, () => info.name], (newValue, oldValue) => {
+      document.title = newValue
+      console.log(oldValue)
+    })
+    info.numbers = [1, 2, 3]
+
+    return {
+      count,
+      increase,
+      double,
+      ...toRefs(info),
+      ...toRefs(xy),
+      result,
+      loading,
+      loaded
+    }
   }
 })
 </script>
-
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
