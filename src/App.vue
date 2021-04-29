@@ -8,6 +8,8 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
+// 启用此行可使用bootstrap自带的js效果 比如完善的下拉菜单
+// import 'bootstrap/dist/js/bootstrap.min.js'
 import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
 

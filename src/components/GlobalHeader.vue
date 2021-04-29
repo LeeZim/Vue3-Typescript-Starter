@@ -11,13 +11,14 @@
     </ul>
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-light my-2">你好 {{ user.name }}</a>
+        <DropDown :username="user.name" />
       </li>
     </ul>
   </nav>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
+import DropDown from './DropDown.vue'
 
 export interface UserProps {
   isLogin: boolean
@@ -39,9 +40,13 @@ export default defineComponent({
     const userLoginBtn = () => {
       context.emit('userLogin')
     }
+
     return {
       userLoginBtn
     }
+  },
+  components: {
+    DropDown
   }
 })
 </script>
