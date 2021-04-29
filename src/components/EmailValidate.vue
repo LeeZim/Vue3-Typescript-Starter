@@ -2,13 +2,14 @@
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label"><slot>邮箱地址</slot></label>
     <input
-      type="email"
       class="form-control"
       id="exampleInputEmail1"
       aria-describedby="emailHelp"
       v-model="emailRef.val"
       @blur="validateEmail"
       :class="{ 'is-invalid': emailRef.error }"
+      @input="updateModulValue"
+      v-bind="$attrs"
     />
     <div id="validationServer03Feedback" class="invalid-feedback" v-if="emailRef.error">
       {{ emailRef.massage }}
@@ -24,19 +25,27 @@ interface emailValidProps {
 }
 export type emailValidsProps = emailValidProps[]
 export default defineComponent({
+  inheritAttrs: false,
   props: {
     rules: {
       type: Array as PropType<emailValidsProps>,
       required: true
-    }
+    },
+    modelValue: String
   },
-  setup(props) {
+  setup(props, context) {
     const emailRef = reactive({
-      val: '',
+      val: props.modelValue || '',
       error: false,
       massage: ''
     })
     const emailReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.]){1,2}[A-Za-z\d]{2,5}$/g
+    const updateModulValue = (e: KeyboardEvent) => {
+      const targetValue: string = (e.target as HTMLInputElement).value
+      emailRef.val = targetValue
+      context.emit('update:modelValue', targetValue)
+    }
+
     const validateEmail = () => {
       if (props.rules) {
         const allpassed = props.rules.every((rule) => {
@@ -60,7 +69,8 @@ export default defineComponent({
     }
     return {
       emailRef,
-      validateEmail
+      validateEmail,
+      updateModulValue
     }
   }
 })
