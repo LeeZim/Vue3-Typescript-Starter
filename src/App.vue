@@ -61,7 +61,6 @@ export default defineComponent({
     })
     const userLoign = () => {
       userInfo.isLogin = true
-      console.log(userInfo.isLogin)
     }
 
     return {

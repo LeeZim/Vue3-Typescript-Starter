@@ -1,12 +1,12 @@
 <template>
-  <div class="dropdown">
+  <div class="dropdown" ref="dropdownitemRef">
     <button
       class="btn btn-primary dropdown-toggle btn-outline-light my-2"
       type="button"
       id="dropdownMenuButton"
       data-bs-toggle="dropdown"
       aria-expanded="false"
-      @click="isOpen = !isOpen"
+      @click="switchClick"
     >
       欢迎 {{ username }}
     </button>
@@ -21,7 +21,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
+import useClickOutside from '../utils/useClickOutside'
 
 export default defineComponent({
   name: 'DropDown',
@@ -33,8 +34,20 @@ export default defineComponent({
   },
   setup() {
     const isOpen = ref<Boolean>(false)
+    const dropdownitemRef = ref<null | HTMLElement>(null)
+    const isClickOutside = useClickOutside(dropdownitemRef)
+    watch(isClickOutside, () => {
+      if (!isClickOutside.value && isOpen.value) {
+        isOpen.value = false
+      }
+    })
+    const switchClick = () => {
+      isOpen.value = !isOpen.value
+    }
     return {
-      isOpen
+      isOpen,
+      dropdownitemRef,
+      switchClick
     }
   }
 })
