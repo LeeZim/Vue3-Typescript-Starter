@@ -1,6 +1,7 @@
 <template>
   <form>
     <emailValid :rules="rules">邮箱验证</emailValid>
+    <inputInputValidate :rule="{ rule: 'passwd' }" :min="10">密码验证</inputInputValidate>
     <div class="mb-3">
       <label for="exampleInputPassword1" class="form-label">Password</label>
       <input type="password" class="form-control" id="exampleInputPassword1" />
@@ -15,6 +16,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import emailValid, { emailValidsProps } from './EmailValidate.vue'
+import inputInputValidate from './InputValidate.vue'
 
 const rules: emailValidsProps = [
   {
@@ -33,7 +35,8 @@ export default defineComponent({
     }
   },
   components: {
-    emailValid
+    emailValid,
+    inputInputValidate
   }
 })
 </script>
