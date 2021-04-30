@@ -38,9 +38,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     rule: Object as PropType<rulesProps>,
-    min: {
-      default: 6
-    },
     modelValue: String
   },
   setup(props, context) {
@@ -84,8 +81,10 @@ export default defineComponent({
             break
           case 'range':
             if (props.rule?.rule === 'passwd') {
-              pass = validataRef.val.length >= props.min
-              validataRef.message = !pass ? `${validData.name}不能少于${props.min}位` : ''
+              pass = validataRef.val.length >= (props.rule.min ? props.rule.min : 6)
+              validataRef.message = !pass
+                ? `${validData.name}不能少于${props.rule.min ? props.rule.min : 6}位`
+                : ''
             }
             break
           case 'email':
