@@ -15,7 +15,8 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive } from 'vue'
+import { computed, defineComponent, onMounted, PropType, reactive } from 'vue'
+import { emitter } from './ValidForm.vue'
 
 export interface rulesProps {
   rule: 'email' | 'passwd'
@@ -32,7 +33,7 @@ interface validDataProps {
   rules: ['empty', 'range', 'email']
 }
 
-const emailReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.]){1,2}[A-Za-z\d]{2,5}$/g
+const emailReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.]){1,2}[A-Za-z\d]{2,5}$/
 
 export default defineComponent({
   inheritAttrs: false,
@@ -90,17 +91,21 @@ export default defineComponent({
           case 'email':
             if (props.rule?.rule === 'email') {
               pass = emailReg.test(validataRef.val)
-              validataRef.message = !pass ? `${validData.name}格式不正确` : ''
+              validataRef.message = pass ? '' : `${validData.name}格式不正确`
             }
             break
           default:
             break
         }
+
         return pass
       })
       validataRef.error = !allpassed
+      return allpassed
     }
-
+    onMounted(() => {
+      emitter.emit('form-item-created', validInput)
+    })
     return {
       validataRef,
       validData,

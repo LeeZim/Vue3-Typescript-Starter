@@ -5,12 +5,16 @@
       :min="10"
       v-model="emailModulValue"
       placeholder="请输入邮箱"
+      ref="emailModulRef"
       >邮箱验证</inputInputValidate
     >
-    <inputInputValidate :rule="{ rule: 'passwd', min: 8 }" type="password" v-model="pwdModulValue"
+    <inputInputValidate
+      :rule="{ rule: 'passwd', min: 8 }"
+      type="password"
+      v-model="pwdModulValue"
+      ref="pwdModulRef"
       >密码验证</inputInputValidate
     >
-    <h3>双向数据绑定验证{{ emailModulValue }}--{{ pwdModulValue }}</h3>
     <!-- <button type="submit" class="btn btn-primary">登录</button> -->
     <template #submit>
       <button type="submit" class="btn btn-danger">SUBMIT</button>
@@ -25,7 +29,7 @@ import ValidForm from './ValidForm.vue'
 export default defineComponent({
   setup() {
     const emailModulValue = ref<String>('Init String')
-    const pwdModulValue = ref<String>('')
+    const pwdModulValue = ref<String>('123')
     const onFormSubmit = (result: boolean) => {
       console.log(result)
     }

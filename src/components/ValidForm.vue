@@ -9,16 +9,32 @@
   </form>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onUnmounted } from 'vue'
+import mitt from 'mitt'
 
+type validFunc = () => boolean
+export const emitter = mitt()
 export default defineComponent({
   emits: ['form-submit'],
   setup(props, context) {
+    let funcArray: validFunc[] = []
     const submitForm = () => {
-      context.emit('form-submit', true)
+      const submitResult = funcArray.map((func) => func()).every((result) => result)
+      context.emit('form-submit', submitResult)
     }
+    const callback = (func?: validFunc) => {
+      if (func) {
+        funcArray.push(func)
+      }
+    }
+    emitter.on('form-item-created', callback)
+    onUnmounted(() => {
+      emitter.off('form-item-created', callback)
+      funcArray = []
+    })
     return {
-      submitForm
+      submitForm,
+      callback
     }
   }
 })
