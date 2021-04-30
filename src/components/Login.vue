@@ -1,7 +1,11 @@
 <template>
   <form>
-    <emailValid :rules="rules">邮箱验证</emailValid>
+    <emailValid :rules="rules" v-model="emailModulValue" type="email" placeholder="请输入邮箱"
+      >邮箱验证</emailValid
+    >
+    <h1>{{ emailModulValue }}</h1>
     <inputInputValidate :rule="{ rule: 'passwd' }" :min="10">密码验证</inputInputValidate>
+
     <div class="mb-3">
       <label for="exampleInputPassword1" class="form-label">Password</label>
       <input type="password" class="form-control" id="exampleInputPassword1" />
@@ -14,7 +18,7 @@
   </form>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import emailValid, { emailValidsProps } from './EmailValidate.vue'
 import inputInputValidate from './InputValidate.vue'
 
@@ -30,8 +34,10 @@ const rules: emailValidsProps = [
 ]
 export default defineComponent({
   setup() {
+    const emailModulValue = ref<String>('Init String')
     return {
-      rules
+      rules,
+      emailModulValue
     }
   },
   components: {
