@@ -1,13 +1,15 @@
 <template>
   <nav class="navbar navbar-dark bg-primary justify-content-between mb-4 px-4">
     <!-- <div class="container-fluid"> -->
-    <a href="#" class="navbar-brand">者也专栏</a>
+    <router-link to="/" class="navbar-brand">者也专栏</router-link>
     <!-- </div> -->
     <ul v-if="!user.isLogin" class="list-inline mb-0">
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-light my-2" @click="userLoginBtn">登录</a>
+        <router-link class="btn btn-outline-light my-2" to="/login">登录</router-link>
       </li>
-      <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">注册</a></li>
+      <li class="list-inline-item">
+        <router-link class="btn btn-outline-light my-2" to="/login">注册</router-link>
+      </li>
     </ul>
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
@@ -38,18 +40,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: {
-    userLogin: null
-  },
-  setup(props, context) {
-    const userLoginBtn = () => {
-      context.emit('userLogin')
-    }
-
-    return {
-      userLoginBtn
-    }
-  },
+  setup() {},
   components: {
     DropDown,
     DropDownItem

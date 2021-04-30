@@ -12,26 +12,37 @@
       :rule="{ rule: 'passwd', min: 8 }"
       type="password"
       v-model="pwdModulValue"
+      placeholder="请输入密码"
       ref="pwdModulRef"
       >密码验证</inputInputValidate
     >
-    <!-- <button type="submit" class="btn btn-primary">登录</button> -->
+
     <template #submit>
-      <button type="submit" class="btn btn-danger">SUBMIT</button>
+      <button type="submit" class="btn btn-primary">登录</button>
     </template>
   </ValidForm>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import inputInputValidate from './InputValidate.vue'
-import ValidForm from './ValidForm.vue'
+import { useRouter } from 'vue-router'
+import inputInputValidate from '../components/InputValidate.vue'
+import ValidForm from '../components/ValidForm.vue'
+import { emitter } from '../App.vue'
 
 export default defineComponent({
   setup() {
-    const emailModulValue = ref<String>('Init String')
-    const pwdModulValue = ref<String>('123')
+    const router = useRouter()
+    const emailModulValue = ref<String>('')
+    const pwdModulValue = ref<String>('')
     const onFormSubmit = (result: boolean) => {
-      console.log(result)
+      if (result) {
+        if (emailModulValue.value === 'viking@163.com' && pwdModulValue.value === '12345678') {
+          setTimeout(() => {
+            emitter.emit('userLoign')
+            router.push('/')
+          }, 3000)
+        }
+      }
     }
     return {
       emailModulValue,

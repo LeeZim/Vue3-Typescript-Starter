@@ -1,80 +1,51 @@
 <template>
   <div class="container">
-    <GlobalHeader :user="userInfo" @userLogin="userLoign" />
-    <ColumnList :list="list" />
-    <Login />
+    <GlobalHeader :user="userInfo" />
+    <router-view></router-view>
+    <footer class="text-center py-4 text-secondary bg-light mt-6">
+      <small>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">@ 2020 者也专栏</li>
+          <li class="list-inline-item">课程</li>
+          <li class="list-inline-item">文档</li>
+          <li class="list-inline-item">联系</li>
+          <li class="list-inline-item">更多</li>
+        </ul>
+      </small>
+    </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 // 启用此行可使用bootstrap自带的js效果 比如完善的下拉菜单
 // import 'bootstrap/dist/js/bootstrap.min.js'
-import ColumnList, { ColumnProps } from './components/ColumnList.vue'
+import mitt from 'mitt'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
-import Login from './components/Login.vue'
 
-const testData: ColumnProps[] = [
-  {
-    id: 1,
-    title: 'test1的专栏',
-    description: '这是的test1专栏，有一段非常有意思的简介，可以更细腻一下哦',
-    avantar:
-      'https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20181223%2F19f8b83848b44920808942ba4442709d.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622247138&t=9be7f6ba8093d1cd53547979bf640f51'
-  },
-  {
-    id: 2,
-    title: 'test2的专栏',
-    description: '这是的test2专栏，有一段非常有意思的简介，可以更细腻一下哦',
-    avantar:
-      'https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20181223%2F19f8b83848b44920808942ba4442709d.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622247138&t=9be7f6ba8093d1cd53547979bf640f51'
-  },
-  {
-    id: 3,
-    title: 'test3的专栏',
-    description: '这是的test3专栏，有一段非常有意思的简介，可以更细腻一下哦',
-    avantar:
-      'https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20181223%2F19f8b83848b44920808942ba4442709d.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622247138&t=9be7f6ba8093d1cd53547979bf640f51'
-  },
-  {
-    id: 4,
-    title: 'test4的专栏',
-    description: '这是的test4专栏，有一段非常有意思的简介，可以更细腻一下哦',
-    avantar:
-      'https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20181223%2F19f8b83848b44920808942ba4442709d.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1622247138&t=9be7f6ba8093d1cd53547979bf640f51'
-  },
-  {
-    id: 5,
-    title: 'test5的专栏',
-    description: '这是的test5专栏，有一段非常有意思的简介，可以更细腻一下哦',
-    avantar: ''
-  }
-]
+export const emitter = mitt()
 export default defineComponent({
   name: 'App',
   setup() {
-    const list = ref<ColumnProps[]>(testData)
-
     const userInfo: UserProps = reactive({
       isLogin: false,
       name: 'Viking',
       id: 12785223
     })
+
     const userLoign = () => {
       userInfo.isLogin = true
+      emitter.off('userLoign', userLoign)
     }
-
+    emitter.on('userLoign', userLoign)
     return {
-      list,
       userInfo,
       userLoign
     }
   },
   components: {
-    ColumnList,
-    GlobalHeader,
-    Login
+    GlobalHeader
   }
 })
 </script>
