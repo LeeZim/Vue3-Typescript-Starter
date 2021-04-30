@@ -6,6 +6,8 @@
       v-model="validataRef.val"
       @blur="validInput"
       :class="{ 'is-invalid': validataRef.error }"
+      @input="updateModulValue"
+      v-bind="$attrs"
     />
     <div id="validationServer03Feedback" class="invalid-feedback" v-if="validataRef.error">
       {{ validataRef.message }}
@@ -28,24 +30,31 @@ interface validataProps {
 interface validDataProps {
   name: string
   rules: ['empty', 'range', 'email']
-  val: string
 }
 
 const emailReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.]){1,2}[A-Za-z\d]{2,5}$/g
 
 export default defineComponent({
+  inheritAttrs: false,
   props: {
     rule: Object as PropType<rulesProps>,
     min: {
       default: 6
-    }
+    },
+    modelValue: String
   },
-  setup(props) {
+  setup(props, context) {
     const validataRef: validataProps = reactive({
-      val: '',
+      val: props.modelValue || '',
       error: false,
       message: ''
     })
+
+    const updateModulValue = (e: KeyboardEvent) => {
+      const targetValue: string = (e.target as HTMLInputElement).value
+      validataRef.val = targetValue
+      context.emit('update:modelValue', targetValue)
+    }
 
     const validData: validDataProps = reactive({
       name: computed((): string => {
@@ -62,8 +71,7 @@ export default defineComponent({
         }
         return name
       }),
-      rules: ['empty', 'range', 'email'],
-      val: validataRef.val
+      rules: ['empty', 'range', 'email']
     })
 
     const validInput = () => {
@@ -97,7 +105,8 @@ export default defineComponent({
     return {
       validataRef,
       validData,
-      validInput
+      validInput,
+      updateModulValue
     }
   }
 })
