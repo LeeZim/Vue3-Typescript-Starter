@@ -3,6 +3,7 @@ import Home from '@/views/home.vue'
 import Vuex from '@/views/vuex.vue'
 import Login from '@/views/Login.vue'
 import Detail from '@/views/ColumnDetail.vue'
+import Create from '@/views/create.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/detail/:id',
     name: 'detail',
     component: Detail
+  },
+  {
+    path: '/create',
+    name: 'create',
+    component: Create
   }
 ]
 

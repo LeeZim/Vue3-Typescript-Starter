@@ -16,7 +16,7 @@ export interface GlobalDataProps {
 const defaultState = {
   columns: testData,
   posts: testPosts,
-  user: { isLogin: false }
+  user: { isLogin: true, name: 'viking', id: 1 }
 }
 
 // Create a new store instance.
@@ -27,6 +27,12 @@ export default createStore<GlobalDataProps>({
   mutations: {
     userLogin(state: GlobalDataProps) {
       state.user = { isLogin: true, name: 'viking' }
+    },
+    userLogout(state: GlobalDataProps) {
+      state.user = { isLogin: false, name: 'viking' }
+    },
+    createPost(state: GlobalDataProps, newPost: PostProps) {
+      state.posts.push(newPost)
     }
   },
   actions: {},

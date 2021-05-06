@@ -14,9 +14,19 @@
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
         <DropDown :username="user.name">
-          <DropDownItem :disabled="true">新建文章</DropDownItem>
-          <DropDownItem>编辑资料</DropDownItem>
-          <DropDownItem>退出登录</DropDownItem>
+          <DropDownItem
+            ><label for="exampleInputEmail1" class="form-label"
+              ><router-link to="/create"> 新建文章</router-link></label
+            ></DropDownItem
+          >
+          <DropDownItem :disabled="true"
+            ><label for="exampleInputEmail1" class="form-label">编辑资料</label></DropDownItem
+          >
+          <DropDownItem
+            ><label for="exampleInputEmail1" class="form-label" @click="logout"
+              >退出登录</label
+            ></DropDownItem
+          >
         </DropDown>
       </li>
     </ul>
@@ -24,8 +34,10 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
+import { useStore } from 'vuex'
 import DropDown from './DropDown.vue'
 import DropDownItem from './DropDownItem.vue'
+import { GlobalDataProps } from '../store/index'
 
 export interface UserProps {
   isLogin: boolean
@@ -40,10 +52,24 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {},
+  setup() {
+    const store = useStore<GlobalDataProps>()
+    const logout = () => {
+      store.commit('userLogout')
+    }
+    return {
+      logout
+    }
+  },
   components: {
     DropDown,
     DropDownItem
   }
 })
 </script>
+<style scoped>
+a {
+  text-decoration-line: none;
+  color: black;
+}
+</style>

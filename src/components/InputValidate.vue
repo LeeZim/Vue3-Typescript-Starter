@@ -1,7 +1,17 @@
 <template>
   <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label"><slot>邮箱地址</slot></label>
+    <slot></slot>
     <input
+      v-if="tag === 'input'"
+      class="form-control"
+      v-model="validataRef.val"
+      @blur="validInput"
+      :class="{ 'is-invalid': validataRef.error }"
+      @input="updateModulValue"
+      v-bind="$attrs"
+    />
+    <textarea
+      v-if="tag === 'textarea'"
       class="form-control"
       v-model="validataRef.val"
       @blur="validInput"
@@ -19,9 +29,11 @@ import { computed, defineComponent, onMounted, PropType, reactive } from 'vue'
 import { emitter } from './ValidForm.vue'
 
 export interface rulesProps {
-  rule: 'email' | 'passwd'
+  rule: 'email' | 'passwd' | 'title' | 'content'
   min?: number
 }
+export type TagType = 'input' | 'textarea'
+
 interface validataProps {
   val: string
   error: boolean
@@ -39,7 +51,11 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     rule: Object as PropType<rulesProps>,
-    modelValue: String
+    modelValue: String,
+    tag: {
+      type: String as PropType<TagType>,
+      default: 'input'
+    }
   },
   setup(props, context) {
     const validataRef: validataProps = reactive({
@@ -63,6 +79,12 @@ export default defineComponent({
             break
           case 'passwd':
             name = '密码'
+            break
+          case 'title':
+            name = '文章标题'
+            break
+          case 'content':
+            name = '文章内容'
             break
           default:
             break
