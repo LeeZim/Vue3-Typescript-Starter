@@ -26,7 +26,7 @@ module.exports = {
       'error',
       {
         props: true,
-        ignorePropertyModificationsFor: ['state', 'config', 'column']
+        ignorePropertyModificationsFor: ['state', 'config', 'column', 'response']
       }
     ],
     'global-require': 0

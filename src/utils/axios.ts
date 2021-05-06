@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import { ElMessage } from 'element-plus'
 
-const baseURL = 'https://api.github.com'
+const baseURL = 'https://apis.imooc.com/api/'
 
 const axios = Axios.create({
   baseURL,
@@ -11,6 +11,10 @@ const axios = Axios.create({
 // 前置拦截器（发起请求之前的拦截）
 axios.interceptors.request.use(
   (response) => {
+    response.params = {
+      ...response.params,
+      icode: '0370D0ADAC459408'
+    }
     /**
      * 根据你的项目实际情况来对 config 做处理
      * 这里对 config 不做任何处理，直接返回
