@@ -10,7 +10,7 @@
           />
           <h5 class="card-title">{{ column.title }}</h5>
           <p class="card-text text-start">{{ column.description }}</p>
-          <router-link :to="`/detail/${column.id}`" class="btn btn-outline-primary"
+          <router-link :to="`/detail/${column._id}`" class="btn btn-outline-primary"
             >进入专栏</router-link
           >
         </div>
@@ -34,7 +34,7 @@ export default defineComponent({
         if (column.avatar && !column.avatar.url) {
           // column.avantar = require('@/assets/defaultIcon.jpg')
           column.avatar.url = '/src/assets/defaultIcon.jpg'
-        } else if (column.avatar) {
+        } else {
           column.avatar.url = `${column.avatar.url}?x-oss-process=image/resize,m_pad,h_50,w_50`
         }
         return column

@@ -1,34 +1,18 @@
 import { createStore } from 'vuex'
-import { testPosts, PostProps } from '../utils/testData'
-import getColumns, { ColumnProps, apiColumnProps } from '../utils/getData'
+import {
+  getColumns,
+  getPosts,
+  ColumnProps,
+  apiColumnProps,
+  PostProps,
+  apiPostProps
+} from '../utils/getData'
 
 interface userProps {
   isLogin: boolean
   name?: string
   id?: number
 }
-
-// interface AvatarProps {
-//   _id: string
-//   url: string
-//   createdAt: string
-// }
-
-// export interface ColumnProps {
-//   _id: number
-//   title: string
-//   avatar?: AvatarProps
-//   description: string
-//   author?: string
-//   createdAt?: string
-// }
-
-// export interface apiColumnProps {
-//   count: number
-//   pageSize: number
-//   currentPage: number
-//   list: ColumnProps[]
-// }
 
 export interface GlobalDataProps {
   columns: ColumnProps[]
@@ -38,11 +22,10 @@ export interface GlobalDataProps {
 
 const defaultState = {
   columns: [],
-  posts: testPosts,
+  posts: [],
   user: { isLogin: true, name: 'viking', id: 1 }
 }
 
-// Create a new store instance.
 const store = createStore<GlobalDataProps>({
   state() {
     return defaultState
@@ -59,18 +42,25 @@ const store = createStore<GlobalDataProps>({
     },
     fetchColumns(state: GlobalDataProps, rawData: apiColumnProps) {
       state.columns = rawData.list
+    },
+    fetchPosts(state: GlobalDataProps, rawData: apiPostProps) {
+      state.posts = rawData.list
+      console.log(rawData.list)
     }
   },
   actions: {
     fetchColumns() {
       getColumns()
+    },
+    fetchPosts(context, columnId: string) {
+      getPosts(columnId)
     }
   },
   getters: {
-    getPostById: (state) => (pid: number) => {
-      return state.posts.filter((p) => p.columnId === pid)
+    getPostById: (state) => (pid: string) => {
+      return state.posts.filter((p) => p.column === pid)
     },
-    getColumnById: (state) => (cid: number) => {
+    getColumnById: (state) => (cid: string) => {
       //  eslint-disable-next-line
       return state.columns.find((c) => c._id === cid)
     }

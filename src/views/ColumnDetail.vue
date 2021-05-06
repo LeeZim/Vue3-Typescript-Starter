@@ -13,7 +13,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
@@ -23,9 +23,13 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const route = useRoute()
-    const currentId = +route.params.id
+    const currentId = route.params.id
     const column = computed(() => store.getters.getColumnById(currentId))
     const list = computed(() => store.getters.getPostById(currentId))
+
+    onMounted(() => {
+      store.dispatch('fetchPosts', currentId)
+    })
     return {
       route,
       column,
