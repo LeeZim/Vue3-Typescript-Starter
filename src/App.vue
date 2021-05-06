@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <GlobalHeader :user="userInfo" />
+    <GlobalHeader :user="currentUser" />
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -17,31 +17,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { computed, defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 // 启用此行可使用bootstrap自带的js效果 比如完善的下拉菜单
 // import 'bootstrap/dist/js/bootstrap.min.js'
 import mitt from 'mitt'
-import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from './store/index'
+import GlobalHeader from './components/GlobalHeader.vue'
 
 export const emitter = mitt()
 export default defineComponent({
   name: 'App',
   setup() {
-    const userInfo: UserProps = reactive({
-      isLogin: true,
-      name: 'Viking',
-      id: 12785223
-    })
-
-    const userLoign = () => {
-      userInfo.isLogin = true
-      emitter.off('userLoign', userLoign)
-    }
-    emitter.on('userLoign', userLoign)
+    const store = useStore<GlobalDataProps>()
+    const currentUser = computed(() => store.state.user)
     return {
-      userInfo,
-      userLoign
+      currentUser
     }
   },
   components: {

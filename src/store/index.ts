@@ -1,27 +1,34 @@
 import { createStore } from 'vuex'
+import { testData, testPosts, ColumnProps, PostProps } from '../utils/testData'
+
+interface userProps {
+  isLogin: boolean
+  name?: string
+  id?: number
+}
+
+export interface GlobalDataProps {
+  columns: ColumnProps[]
+  posts: PostProps[]
+  user: userProps
+}
 
 const defaultState = {
-  count: 0
+  columns: testData,
+  posts: testPosts,
+  user: { isLogin: false }
 }
 
 // Create a new store instance.
-export default createStore({
+export default createStore<GlobalDataProps>({
   state() {
     return defaultState
   },
   mutations: {
-    increment(state: typeof defaultState) {
-      state.count += 1
+    userLogin(state: GlobalDataProps) {
+      state.user = { isLogin: true, name: 'viking' }
     }
   },
-  actions: {
-    increment(context) {
-      context.commit('increment')
-    }
-  },
-  getters: {
-    double(state: typeof defaultState) {
-      return 2 * state.count
-    }
-  }
+  actions: {},
+  getters: {}
 })

@@ -25,12 +25,13 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import inputInputValidate from '../components/InputValidate.vue'
 import ValidForm from '../components/ValidForm.vue'
-import { emitter } from '../App.vue'
 
 export default defineComponent({
   setup() {
+    const store = useStore()
     const router = useRouter()
     const emailModulValue = ref<String>('')
     const pwdModulValue = ref<String>('')
@@ -38,7 +39,7 @@ export default defineComponent({
       if (result) {
         if (emailModulValue.value === 'viking@163.com' && pwdModulValue.value === '12345678') {
           setTimeout(() => {
-            emitter.emit('userLoign')
+            store.commit('userLogin')
             router.push('/')
           }, 3000)
         }

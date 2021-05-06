@@ -4,7 +4,7 @@
       <div class="card h-100 shadow-sm">
         <div class="card-body text-center">
           <img
-            :src="column.avantar"
+            :src="column.avatar"
             :alt="column.title"
             class="rounded-circle border border-light w-25 my-3"
           />
@@ -19,30 +19,20 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
-
-export interface ColumnProps {
-  id: number
-  title: string
-  avantar?: string
-  description: string
-}
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store/index'
 
 export default defineComponent({
   name: 'ColumnList',
-  props: {
-    list: {
-      // 给一个数组做类型断言
-      type: Array as PropType<ColumnProps[]>,
-      required: true
-    }
-  },
-  setup(props) {
+  setup() {
+    const store = useStore<GlobalDataProps>()
+    const list = store.state.columns
     const columnList = computed(() => {
-      return props.list.map((column) => {
-        if (!column.avantar) {
+      return list.map((column) => {
+        if (!column.avatar) {
           // column.avantar = require('@/assets/defaultIcon.jpg')
-          column.avantar = '/src/assets/defaultIcon.jpg'
+          column.avatar = '/src/assets/defaultIcon.jpg'
         }
         return column
       })
