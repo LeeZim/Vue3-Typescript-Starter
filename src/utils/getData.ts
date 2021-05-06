@@ -50,7 +50,6 @@ const getColumns = () => {
 const getPosts = (columnId: string) => {
   axios.get(`/columns/${columnId}/posts`).then((resp) => {
     store.commit('fetchPosts', resp.data.data)
-    console.log(resp.data)
   })
 }
 

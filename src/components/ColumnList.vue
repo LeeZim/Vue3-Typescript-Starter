@@ -32,8 +32,8 @@ export default defineComponent({
     const columnList = computed<ColumnProps[]>(() => {
       return list.value.map((column: ColumnProps) => {
         if (column.avatar && !column.avatar.url) {
-          // column.avantar = require('@/assets/defaultIcon.jpg')
-          column.avatar.url = '/src/assets/defaultIcon.jpg'
+          column.avatar = { ...column.avatar, url: require('@/assets/defaultIcon.jpg') }
+          // column.avatar.url = '/src/assets/defaultIcon.jpg'
         } else {
           column.avatar.url = `${column.avatar.url}?x-oss-process=image/resize,m_pad,h_50,w_50`
         }

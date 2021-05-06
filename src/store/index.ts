@@ -45,7 +45,6 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPosts(state: GlobalDataProps, rawData: apiPostProps) {
       state.posts = rawData.list
-      console.log(rawData.list)
     }
   },
   actions: {
