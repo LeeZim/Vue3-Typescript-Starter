@@ -29,7 +29,7 @@ export default defineComponent({
   name: 'App',
   setup() {
     const userInfo: UserProps = reactive({
-      isLogin: false,
+      isLogin: true,
       name: 'Viking',
       id: 12785223
     })
