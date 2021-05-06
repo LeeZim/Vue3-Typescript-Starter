@@ -30,5 +30,12 @@ export default createStore<GlobalDataProps>({
     }
   },
   actions: {},
-  getters: {}
+  getters: {
+    getPostById: (state) => (pid: number) => {
+      return state.posts.filter((p) => p.columnId === pid)
+    },
+    getColumnById: (state) => (cid: number) => {
+      return state.columns.find((c) => c.id === cid)
+    }
+  }
 })

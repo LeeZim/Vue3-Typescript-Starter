@@ -41,7 +41,7 @@ export default defineComponent({
           setTimeout(() => {
             store.commit('userLogin')
             router.push('/')
-          }, 3000)
+          }, 1500)
         }
       }
     }
