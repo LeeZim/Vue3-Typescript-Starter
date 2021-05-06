@@ -20,7 +20,7 @@ const defaultState = {
 }
 
 // Create a new store instance.
-export default createStore<GlobalDataProps>({
+const store = createStore<GlobalDataProps>({
   state() {
     return defaultState
   },
@@ -45,3 +45,5 @@ export default createStore<GlobalDataProps>({
     }
   }
 })
+
+export default store

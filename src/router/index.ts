@@ -4,6 +4,7 @@ import Vuex from '@/views/vuex.vue'
 import Login from '@/views/Login.vue'
 import Detail from '@/views/ColumnDetail.vue'
 import Create from '@/views/create.vue'
+import store from '../store/index'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,7 +25,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: { redirectAlreadyLogin: true }
   },
   {
     path: '/detail/:id',
@@ -34,13 +36,26 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/create',
     name: 'create',
-    component: Create
+    component: Create,
+    meta: { requiredLogin: true }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // to是即将进入的路由
+  // from是即将离开的路由
+  if (to.meta.requiredLogin && !store.state.user.isLogin) {
+    next({ name: 'login' })
+  } else if (to.meta.redirectAlreadyLogin && store.state.user.isLogin) {
+    next({ name: 'Home' })
+  } else {
+    next()
+  }
 })
 
 export default router
