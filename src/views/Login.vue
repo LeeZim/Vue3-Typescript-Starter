@@ -28,6 +28,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import inputInputValidate from '../components/InputValidate.vue'
 import ValidForm from '../components/ValidForm.vue'
+import createMessage from '../utils/createMessage'
 
 export default defineComponent({
   setup() {
@@ -44,7 +45,10 @@ export default defineComponent({
         store
           .dispatch('loginAndFetch', payload)
           .then(() => {
-            router.push('/')
+            createMessage('登陆成功', 'success', 1500)
+            setTimeout(() => {
+              router.push('/')
+            }, 1500)
           })
           .catch((e) => {
             console.log(`login-error:${e}`)

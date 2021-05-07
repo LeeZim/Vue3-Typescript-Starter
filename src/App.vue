@@ -2,7 +2,7 @@
   <div class="container">
     <GlobalHeader :user="currentUser" />
     <Loader v-if="isLoading" text="拼命加载中" background="rgba(255, 255, 255, 0.6)" />
-    <Message :message="errorMsg.message" v-if="errorMsg.status" />
+    <Message :type="'error'" :message="errorMsg.message" v-if="errorMsg.status" />
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
