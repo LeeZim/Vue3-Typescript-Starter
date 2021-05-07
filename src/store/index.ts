@@ -32,9 +32,9 @@ export interface GlobalDataProps {
 const defaultState = {
   columns: [],
   posts: [],
-  user: { isLogin: false, name: 'viking', id: 1 },
+  user: { isLogin: false },
   loading: false,
-  token: ''
+  token: localStorage.getItem('token') || ''
 }
 
 const store = createStore<GlobalDataProps>({
@@ -63,6 +63,7 @@ const store = createStore<GlobalDataProps>({
     login(state: GlobalDataProps, rawData) {
       const { token } = rawData.data
       state.token = token
+      localStorage.setItem('token', token)
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
     },
     getCurrentUser(state: GlobalDataProps, rawData) {
