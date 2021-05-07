@@ -13,10 +13,15 @@ const axios = Axios.create({
 axios.interceptors.request.use(
   (response) => {
     store.commit('setLoading', true)
-    response.params = {
-      ...response.params,
-      icode: '0370D0ADAC459408'
+    if (response.method === 'post') {
+      response.data = { ...response.data, icode: '0370D0ADAC459408' }
+    } else {
+      response.params = {
+        ...response.params,
+        icode: '0370D0ADAC459408'
+      }
     }
+
     /**
      * 根据你的项目实际情况来对 config 做处理
      * 这里对 config 不做任何处理，直接返回

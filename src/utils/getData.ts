@@ -61,4 +61,4 @@ const getPosts = (columnId: string, mutationName: string, commit: Commit) => {
   getAndCommit(`/columns/${columnId}/posts`, mutationName, commit)
 }
 
-export { getColumns, getPosts }
+export { getColumns, getPosts, getAndCommit }

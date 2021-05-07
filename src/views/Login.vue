@@ -9,7 +9,7 @@
       >邮箱验证</inputInputValidate
     >
     <inputInputValidate
-      :rule="{ rule: 'passwd', min: 8 }"
+      :rule="{ rule: 'passwd', min: 6 }"
       type="password"
       v-model="pwdModulValue"
       placeholder="请输入密码"
@@ -37,14 +37,17 @@ export default defineComponent({
     const pwdModulValue = ref<String>('')
     const onFormSubmit = (result: boolean) => {
       if (result) {
-        if (emailModulValue.value === 'viking@163.com' && pwdModulValue.value === '12345678') {
-          setTimeout(() => {
-            store.commit('userLogin')
-            router.push('/')
-          }, 1500)
+        const payload = {
+          email: emailModulValue.value,
+          password: pwdModulValue.value
         }
+        store.dispatch('loginAndFetch', payload).then((data) => {
+          console.log(data)
+          router.push('/')
+        })
       }
     }
+
     return {
       emailModulValue,
       pwdModulValue,

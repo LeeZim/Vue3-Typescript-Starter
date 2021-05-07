@@ -13,7 +13,7 @@
     </ul>
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
-        <DropDown :username="user.name">
+        <DropDown :username="user.nickName">
           <DropDownItem
             ><label for="exampleInputEmail1" class="form-label"
               ><router-link to="/create"> 新建文章</router-link></label
@@ -37,18 +37,13 @@ import { defineComponent, PropType } from 'vue'
 import { useStore } from 'vuex'
 import DropDown from './DropDown.vue'
 import DropDownItem from './DropDownItem.vue'
-import { GlobalDataProps } from '../store/index'
+import { GlobalDataProps, userProps } from '../store/index'
 
-export interface UserProps {
-  isLogin: boolean
-  name?: string
-  id?: number
-}
 export default defineComponent({
   name: 'GlobalHeader',
   props: {
     user: {
-      type: Object as PropType<UserProps>,
+      type: Object as PropType<userProps>,
       required: true
     }
   },

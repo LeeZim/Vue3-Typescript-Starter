@@ -5,13 +5,20 @@ import {
   ColumnProps,
   apiColumnProps,
   PostProps,
-  apiPostProps
+  apiPostProps,
+  getAndCommit
 } from '../utils/getData'
 
-interface userProps {
+import postAndCommit from '../utils/postAndCommit'
+import axios from '../utils/axios'
+
+export interface userProps {
   isLogin: boolean
-  name?: string
-  id?: number
+  nickName?: string
+  _id?: string
+  email?: string
+  description?: string
+  column?: string
 }
 
 export interface GlobalDataProps {
@@ -19,13 +26,15 @@ export interface GlobalDataProps {
   posts: PostProps[]
   user: userProps
   loading: boolean
+  token: string
 }
 
 const defaultState = {
   columns: [],
   posts: [],
-  user: { isLogin: true, name: 'viking', id: 1 },
-  loading: false
+  user: { isLogin: false, name: 'viking', id: 1 },
+  loading: false,
+  token: ''
 }
 
 const store = createStore<GlobalDataProps>({
@@ -33,24 +42,31 @@ const store = createStore<GlobalDataProps>({
     return defaultState
   },
   mutations: {
-    userLogin(state: GlobalDataProps) {
-      state.user = { isLogin: true, name: 'viking' }
-    },
+    // userLogin(state: GlobalDataProps) {
+    //   state.user = { isLogin: true, name: 'viking' }
+    // },
     userLogout(state: GlobalDataProps) {
-      state.user = { isLogin: false, name: 'viking' }
+      state.user.isLogin = false
     },
     createPost(state: GlobalDataProps, newPost: PostProps) {
       state.posts.push(newPost)
     },
     fetchColumns(state: GlobalDataProps, rawData: apiColumnProps) {
       state.columns = rawData.list
-      console.log(rawData)
     },
     fetchPosts(state: GlobalDataProps, rawData: apiPostProps) {
       state.posts = rawData.list
     },
     setLoading(state: GlobalDataProps, status: boolean) {
       state.loading = status
+    },
+    login(state: GlobalDataProps, rawData) {
+      const { token } = rawData.data
+      state.token = token
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
+    },
+    getCurrentUser(state: GlobalDataProps, rawData) {
+      state.user = { isLogin: true, ...rawData }
     }
   },
   actions: {
@@ -59,6 +75,17 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPosts({ commit }, columnId: string) {
       getPosts(columnId, 'fetchPosts', commit)
+    },
+    login({ commit }, payload) {
+      return postAndCommit('/user/login', 'login', commit, payload)
+    },
+    fetchUser({ commit }) {
+      getAndCommit('/user/current', 'getCurrentUser', commit)
+    },
+    loginAndFetch({ dispatch }, loginData) {
+      return dispatch('login', loginData).then(() => {
+        return dispatch('fetchUser')
+      })
     }
   },
   getters: {

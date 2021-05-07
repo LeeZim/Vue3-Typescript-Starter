@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <GlobalHeader :user="currentUser" />
-    <h1 v-if="isLoading">正在读取</h1>
+    <Loader v-if="isLoading" text="拼命加载中" background="rgba(255, 255, 255, 0.6)"></Loader>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -26,6 +26,7 @@ import mitt from 'mitt'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from './store/index'
 import GlobalHeader from './components/GlobalHeader.vue'
+import Loader from './components/Loader.vue'
 
 export const emitter = mitt()
 export default defineComponent({
@@ -40,7 +41,8 @@ export default defineComponent({
     }
   },
   components: {
-    GlobalHeader
+    GlobalHeader,
+    Loader
   }
 })
 </script>
