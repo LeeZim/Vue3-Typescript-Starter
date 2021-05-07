@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <GlobalHeader :user="currentUser" />
+    <h1 v-if="isLoading">正在读取</h1>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -32,8 +33,10 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
+    const isLoading = computed<boolean>(() => store.state.loading)
     return {
-      currentUser
+      currentUser,
+      isLoading
     }
   },
   components: {

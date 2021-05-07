@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import { ElMessage } from 'element-plus'
+import store from '../store/index'
 
 const baseURL = 'https://apis.imooc.com/api/'
 
@@ -11,6 +12,7 @@ const axios = Axios.create({
 // 前置拦截器（发起请求之前的拦截）
 axios.interceptors.request.use(
   (response) => {
+    store.commit('setLoading', true)
     response.params = {
       ...response.params,
       icode: '0370D0ADAC459408'
@@ -29,6 +31,7 @@ axios.interceptors.request.use(
 // 后置拦截器（获取到响应时的拦截）
 axios.interceptors.response.use(
   (response) => {
+    store.commit('setLoading', false)
     /**
      * 根据你的项目实际情况来对 response 和 error 做处理
      * 这里对 response 和 error 不做任何处理，直接返回

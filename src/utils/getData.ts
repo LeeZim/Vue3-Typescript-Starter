@@ -1,5 +1,5 @@
+import { Commit } from 'vuex'
 import axios from './axios'
-import store from '../store/index'
 
 interface AvatarProps {
   _id: string
@@ -41,16 +41,24 @@ export interface apiPostProps {
   pageSize: number
   currentPage: number
 }
-const getColumns = () => {
-  axios.get('/columns').then((resp) => {
-    store.commit('fetchColumns', resp.data.data)
-  })
+
+interface PropsData {
+  code: number
+  data: apiColumnProps | apiPostProps
+  msg: string
 }
 
-const getPosts = (columnId: string) => {
-  axios.get(`/columns/${columnId}/posts`).then((resp) => {
-    store.commit('fetchPosts', resp.data.data)
-  })
+const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
+  const { data } = await axios.get<PropsData>(url)
+  commit(mutationName, data.data)
+}
+
+const getColumns = (mutationName: string, commit: Commit) => {
+  getAndCommit('/columns', mutationName, commit)
+}
+
+const getPosts = (columnId: string, mutationName: string, commit: Commit) => {
+  getAndCommit(`/columns/${columnId}/posts`, mutationName, commit)
 }
 
 export { getColumns, getPosts }

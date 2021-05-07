@@ -18,12 +18,14 @@ export interface GlobalDataProps {
   columns: ColumnProps[]
   posts: PostProps[]
   user: userProps
+  loading: boolean
 }
 
 const defaultState = {
   columns: [],
   posts: [],
-  user: { isLogin: true, name: 'viking', id: 1 }
+  user: { isLogin: true, name: 'viking', id: 1 },
+  loading: false
 }
 
 const store = createStore<GlobalDataProps>({
@@ -42,17 +44,21 @@ const store = createStore<GlobalDataProps>({
     },
     fetchColumns(state: GlobalDataProps, rawData: apiColumnProps) {
       state.columns = rawData.list
+      console.log(rawData)
     },
     fetchPosts(state: GlobalDataProps, rawData: apiPostProps) {
       state.posts = rawData.list
+    },
+    setLoading(state: GlobalDataProps, status: boolean) {
+      state.loading = status
     }
   },
   actions: {
-    fetchColumns() {
-      getColumns()
+    fetchColumns({ commit }) {
+      getColumns('fetchColumns', commit)
     },
-    fetchPosts(context, columnId: string) {
-      getPosts(columnId)
+    fetchPosts({ commit }, columnId: string) {
+      getPosts(columnId, 'fetchPosts', commit)
     }
   },
   getters: {

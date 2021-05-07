@@ -19,7 +19,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUpdated } from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import { ColumnProps } from '../utils/getData'
@@ -30,20 +30,21 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const list = computed<ColumnProps[]>(() => store.state.columns)
     const columnList = computed<ColumnProps[]>(() => {
-      return list.value.map((column: ColumnProps) => {
-        if (column.avatar && !column.avatar.url) {
-          column.avatar = { ...column.avatar, url: require('@/assets/defaultIcon.jpg') }
-          // column.avatar.url = '/src/assets/defaultIcon.jpg'
-        } else {
-          column.avatar.url = `${column.avatar.url}?x-oss-process=image/resize,m_pad,h_50,w_50`
-        }
-        return column
-      })
+      return (
+        list.value &&
+        list.value.map((column: ColumnProps) => {
+          if (column.avatar && !column.avatar.url) {
+            column.avatar = { ...column.avatar, url: require('@/assets/defaultIcon.jpg') }
+          } else {
+            column.avatar.url = `${column.avatar.url}?x-oss-process=image/resize,m_pad,h_50,w_50`
+          }
+          return column
+        })
+      )
     })
     onMounted(() => {
       store.dispatch('fetchColumns')
     })
-    onUpdated(() => {})
     return {
       columnList
     }
