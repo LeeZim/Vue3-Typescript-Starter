@@ -35,6 +35,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import DropDown from './DropDown.vue'
 import DropDownItem from './DropDownItem.vue'
 import { GlobalDataProps, userProps } from '../store/index'
@@ -49,8 +50,10 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>()
+    const router = useRouter()
     const logout = () => {
       store.commit('userLogout')
+      router.push('/')
     }
     return {
       logout

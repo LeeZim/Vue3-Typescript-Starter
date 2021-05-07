@@ -21,12 +21,18 @@ export interface userProps {
   column?: string
 }
 
+export interface GlobalErrorProps {
+  status: boolean
+  message?: string
+}
+
 export interface GlobalDataProps {
   columns: ColumnProps[]
   posts: PostProps[]
   user: userProps
   loading: boolean
   token: string
+  error: GlobalErrorProps
 }
 
 const defaultState = {
@@ -34,7 +40,8 @@ const defaultState = {
   posts: [],
   user: { isLogin: false },
   loading: false,
-  token: localStorage.getItem('token') || ''
+  token: localStorage.getItem('token') || '',
+  error: { status: false }
 }
 
 const store = createStore<GlobalDataProps>({
@@ -47,6 +54,8 @@ const store = createStore<GlobalDataProps>({
     // },
     userLogout(state: GlobalDataProps) {
       state.user.isLogin = false
+      localStorage.removeItem('token')
+      state.token = ''
     },
     createPost(state: GlobalDataProps, newPost: PostProps) {
       state.posts.push(newPost)
@@ -68,6 +77,9 @@ const store = createStore<GlobalDataProps>({
     },
     getCurrentUser(state: GlobalDataProps, rawData) {
       state.user = { isLogin: true, ...rawData }
+    },
+    setError(state: GlobalDataProps, e: GlobalErrorProps) {
+      state.error = e
     }
   },
   actions: {

@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <GlobalHeader :user="currentUser" />
-    <Loader v-if="isLoading" text="拼命加载中" background="rgba(255, 255, 255, 0.6)"></Loader>
+    <Loader v-if="isLoading" text="拼命加载中" background="rgba(255, 255, 255, 0.6)" />
+    <Message :message="errorMsg.message" v-if="errorMsg.status" />
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -27,6 +28,7 @@ import { useStore } from 'vuex'
 import { GlobalDataProps, userProps } from './store/index'
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from './components/Loader.vue'
+import Message from './components/Message.vue'
 import axios from './utils/axios'
 
 export const emitter = mitt()
@@ -45,14 +47,17 @@ export default defineComponent({
         })
       }
     })
+    const errorMsg = computed(() => store.state.error)
     return {
       currentUser,
-      isLoading
+      isLoading,
+      errorMsg
     }
   },
   components: {
     GlobalHeader,
-    Loader
+    Loader,
+    Message
   }
 })
 </script>

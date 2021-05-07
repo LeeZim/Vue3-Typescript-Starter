@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 import store from '../store/index'
 
 const baseURL = 'https://apis.imooc.com/api/'
@@ -44,15 +44,18 @@ axios.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response && error.response.data) {
-      const code = error.response.status
-      const msg = error.response.data.message
-      ElMessage.error(`Code: ${code}, Message: ${msg}`)
-      console.error(`[Axios Error]`, error.response)
-    } else {
-      ElMessage.error(`${error}`)
-    }
-    return Promise.reject(error)
+    const respError = error.response.data.error
+    store.commit('setError', { status: true, message: respError })
+    store.commit('setLoading', false)
+    // if (error.response && error.response.data) {
+    //   const code = error.response.status
+    //   const msg = error.response.data.message
+    //   ElMessage.error(`Code: ${code}, Message: ${msg}`)
+    //   console.error(`[Axios Error]`, error.response)
+    // } else {
+    //   ElMessage.error(`${error}`)
+    // }
+    return Promise.reject(respError)
   }
 )
 

@@ -41,10 +41,14 @@ export default defineComponent({
           email: emailModulValue.value,
           password: pwdModulValue.value
         }
-        store.dispatch('loginAndFetch', payload).then((data) => {
-          console.log(data)
-          router.push('/')
-        })
+        store
+          .dispatch('loginAndFetch', payload)
+          .then(() => {
+            router.push('/')
+          })
+          .catch((e) => {
+            console.log(`login-error:${e}`)
+          })
       }
     }
 
