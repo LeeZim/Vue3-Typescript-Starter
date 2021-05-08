@@ -3,7 +3,8 @@ import Home from '@/views/home.vue'
 import Vuex from '@/views/vuex.vue'
 import Login from '@/views/Login.vue'
 import Detail from '@/views/ColumnDetail.vue'
-import Create from '@/views/create.vue'
+// import Create from '@/views/create.vue'
+import CreatePost from '@/views/CreatePost.vue'
 import store from '../store/index'
 
 const routes: Array<RouteRecordRaw> = [
@@ -36,7 +37,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/create',
     name: 'create',
-    component: Create,
+    component: CreatePost,
     meta: { requiredLogin: true }
   }
 ]

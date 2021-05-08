@@ -20,12 +20,12 @@ export interface PostProps {
   createdAt?: string
   excerpt?: string
   content?: string
-  image: AvatarProps
+  image?: AvatarProps
   column: string
-  author: string
+  author?: string
   title: string
-  _id: string
-  key: number
+  _id?: string
+  key?: number
 }
 
 export interface apiColumnProps {

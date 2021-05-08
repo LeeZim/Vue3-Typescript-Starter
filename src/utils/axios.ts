@@ -14,7 +14,12 @@ axios.interceptors.request.use(
   (response) => {
     store.commit('setLoading', true)
     if (response.method === 'post') {
-      response.data = { ...response.data, icode: '0370D0ADAC459408' }
+      if (response.data instanceof FormData) {
+        response.data.append('icode', '0370D0ADAC459408')
+      } else {
+        // 普通的 body 对象，添加到 data 中
+        response.data = { ...response.data, icode: '0370D0ADAC459408' }
+      }
     } else {
       response.params = {
         ...response.params,
