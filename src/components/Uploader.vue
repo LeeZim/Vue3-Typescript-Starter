@@ -13,18 +13,24 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import axios from '../utils/axios'
 
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
+// eslint-disable-next-line no-unused-vars
+export type CheckFunction = (file: File) => boolean
 export default defineComponent({
   props: {
     action: {
       type: String,
       required: true
+    },
+    beforeUpload: {
+      type: Function as PropType<CheckFunction>
     }
   },
-  setup(props) {
+  emits: ['file-uploaded', 'file-uploaded-error'],
+  setup(props, context) {
     const fileInput = ref<null | HTMLInputElement>(null)
     const fileStatus = ref<UploadStatus>('ready')
     const trigerUpload = () => {
@@ -35,8 +41,14 @@ export default defineComponent({
     const handleFileChange = (e: Event) => {
       const currentTarget = e.target as HTMLInputElement
       if (currentTarget.files) {
-        fileStatus.value = 'loading'
         const files = Array.from(currentTarget.files)
+        if (props.beforeUpload) {
+          const result = props.beforeUpload(files[0])
+          if (!result) {
+            return
+          }
+        }
+        fileStatus.value = 'loading'
         const formData = new FormData()
         formData.append('file', files[0])
         axios
@@ -46,11 +58,11 @@ export default defineComponent({
             }
           })
           .then((resp) => {
-            console.log(resp.data)
             fileStatus.value = 'success'
+            context.emit('file-uploaded', resp.data)
           })
           .catch((error) => {
-            console.log(error)
+            context.emit('file-uploaded-error', { error })
             fileStatus.value = 'error'
           })
           .finally(() => {
