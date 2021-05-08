@@ -1,7 +1,23 @@
 <template>
   <div class="create-post-page">
     <h4>新建文章</h4>
-    <input type="file" name="file" @change.prevent="handleFileChange" accept=".png" />
+    <Uploader
+      :action="'upload'"
+      class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+    >
+      <h2>点击上传头图</h2>
+      <template #loading>
+        <div class="d-flex">
+          <div class="spinner-border text-secondary" role="status">
+            <!-- <span class="sr-only">Loading...</span> -->
+          </div>
+          <h2>正在上传</h2>
+        </div>
+      </template>
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" />
+      </template>
+    </Uploader>
     <ValidForm @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -32,12 +48,14 @@ import { GlobalDataProps } from '../store'
 import InputValidate from '../components/InputValidate.vue'
 import ValidForm from '../components/ValidForm.vue'
 import { PostProps } from '../utils/getData'
+import Uploader from '../components/Uploader.vue'
 
 export default defineComponent({
   name: 'Login',
   components: {
     InputValidate,
-    ValidForm
+    ValidForm,
+    Uploader
   },
   setup() {
     const titleVal = ref('')
@@ -85,3 +103,15 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="stylus">
+.create-post-page .file-upload-container {
+  height: 200px;
+  cursor: pointer;
+}
+
+.create-post-page .file-upload-container img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover
+}
+</style>

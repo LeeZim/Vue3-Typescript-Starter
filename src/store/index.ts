@@ -56,6 +56,7 @@ const store = createStore<GlobalDataProps>({
       state.user.isLogin = false
       localStorage.removeItem('token')
       state.token = ''
+      delete axios.defaults.headers.common.Authorization
     },
     createPost(state: GlobalDataProps, newPost: PostProps) {
       state.posts.push(newPost)

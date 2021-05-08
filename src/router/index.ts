@@ -73,12 +73,15 @@ router.beforeEach((to, from, next) => {
       })
       .catch(() => {
         localStorage.removeItem('token')
+        store.commit('userLogout')
         if (requiredLogin) {
           next({ name: 'login' })
         } else {
           next()
         }
       })
+  } else {
+    next()
   }
 })
 
