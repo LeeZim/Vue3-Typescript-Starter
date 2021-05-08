@@ -71,9 +71,9 @@ export default defineComponent({
             uploadedData.value = resp.data
             context.emit('file-uploaded', resp.data)
           })
-          .catch((error) => {
-            context.emit('file-uploaded-error', { error })
-            fileStatus.value = 'error'
+          .catch(() => {
+            // context.emit('file-uploaded-error', { error })
+            // fileStatus.value = 'error'
           })
           .finally(() => {
             if (fileInput.value) {

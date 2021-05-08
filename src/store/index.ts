@@ -59,7 +59,7 @@ const store = createStore<GlobalDataProps>({
       delete axios.defaults.headers.common.Authorization
     },
     createPost(state: GlobalDataProps, newPost: PostProps) {
-      state.posts.push(newPost)
+      console.log(newPost)
     },
     fetchColumns(state: GlobalDataProps, rawData: apiColumnProps) {
       state.columns = rawData.list
@@ -92,6 +92,9 @@ const store = createStore<GlobalDataProps>({
     },
     login({ commit }, payload) {
       return postAndCommit('/user/login', 'login', commit, payload)
+    },
+    createPost({ commit }, payload) {
+      return postAndCommit('/posts', 'createPost', commit, payload)
     },
     fetchUser({ commit }) {
       return getAndCommit('/user/current', 'getCurrentUser', commit)

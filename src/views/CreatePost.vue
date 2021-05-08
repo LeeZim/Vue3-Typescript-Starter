@@ -4,6 +4,8 @@
     <Uploader
       :action="'upload'"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+      :beforeUpload="uploadCheck"
+      @file-uploaded="handleFileUploaded"
     >
       <h2>点击上传头图</h2>
       <template #loading>
@@ -49,6 +51,8 @@ import InputValidate from '../components/InputValidate.vue'
 import ValidForm from '../components/ValidForm.vue'
 import { PostProps } from '../utils/getData'
 import Uploader from '../components/Uploader.vue'
+import { beforeUploadCheck } from '../utils/helper'
+import createMessage from '../utils/createMessage'
 
 export default defineComponent({
   name: 'Login',
@@ -62,20 +66,37 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore<GlobalDataProps>()
     const contentVal = ref('')
+
+    let imageId = ''
+    let imageUrl = ''
+    const handleFileUploaded = (rawData: any) => {
+      // eslint-disable-next-line no-underscore-dangle
+      if (rawData.data._id) {
+        // eslint-disable-next-line no-underscore-dangle
+        imageId = rawData.data._id
+        imageUrl = rawData.data.url
+      }
+    }
     const onFormSubmit = (result: boolean) => {
       if (result) {
-        const { column } = store.state.user
+        // eslint-disable-next-line no-underscore-dangle
+        const { column, _id } = store.state.user
         if (column) {
           const newPost: PostProps = {
             title: titleVal.value,
             content: contentVal.value,
-            column
+            column,
+            author: _id,
+            image: { _id: imageId, url: imageUrl }
           }
-          store.commit('createPost', newPost)
-          router.push({ name: '/' })
+          store.dispatch('createPost', newPost).then(() => {
+            createMessage('发表成功，2秒之后跳转到文章', 'success', 2000)
+            router.push(`/detail/${_id}`)
+          })
         }
       }
     }
+
     const handleFileChange = (e: Event) => {
       const target = e.target as HTMLInputElement
       const { files } = target
@@ -94,11 +115,24 @@ export default defineComponent({
           })
       }
     }
+    const uploadCheck = (file: File) => {
+      const result = beforeUploadCheck(file, { format: ['image/jpeg', 'image/png'], size: 1 })
+      const { passed, error } = result
+      if (error === 'format') {
+        createMessage('上传图片只能是 JPG/PNG 格式', 'error', 1500)
+      }
+      if (error === 'size') {
+        createMessage('上传图片大小不能超过 1Mb', 'error', 1500)
+      }
+      return passed
+    }
     return {
       titleVal,
       contentVal,
       onFormSubmit,
-      handleFileChange
+      handleFileChange,
+      uploadCheck,
+      handleFileUploaded
     }
   }
 })

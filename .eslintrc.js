@@ -21,6 +21,7 @@ module.exports = {
     'import/no-absolute-path': 'off',
     'import/no-extraneous-dependencies': 'off',
     'vue/no-multiple-template-root': 'off',
+    'no-underscore-dangle': 'off',
     'no-console': 'off',
     'no-param-reassign': [
       'error',
