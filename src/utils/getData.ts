@@ -51,6 +51,7 @@ interface PropsData {
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get<PropsData>(url)
   commit(mutationName, data.data)
+  return data
 }
 
 const getColumns = (mutationName: string, commit: Commit) => {

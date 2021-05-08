@@ -93,7 +93,7 @@ const store = createStore<GlobalDataProps>({
       return postAndCommit('/user/login', 'login', commit, payload)
     },
     fetchUser({ commit }) {
-      getAndCommit('/user/current', 'getCurrentUser', commit)
+      return getAndCommit('/user/current', 'getCurrentUser', commit)
     },
     loginAndFetch({ dispatch }, loginData) {
       return dispatch('login', loginData).then(() => {

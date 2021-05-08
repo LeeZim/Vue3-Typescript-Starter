@@ -1,10 +1,17 @@
 <template>
   <div class="file-upload">
-    <button class="btn btn-primary" @click.prevent="trigerUpload">
-      <span v-if="fileStatus === 'loading'">正在上传</span>
-      <span v-else-if="fileStatus === 'success'">上传成功</span>
-      <span v-else>点击上传</span></button
-    ><input
+    <div class="file-upload-container" @click.prevent="trigerUpload">
+      <slot v-if="fileStatus === 'loading'" name="loading">
+        <button class="btn btn-primary" disabled>正在上传</button>
+      </slot>
+      <slot v-else-if="fileStatus === 'success'" name="uploaded" :uploadedData="uploadedData">
+        <button class="btn btn-primary">上传成功</button>
+      </slot>
+      <slot v-else name="default">
+        <button class="btn btn-primary">点击上传</button>
+      </slot>
+    </div>
+    <input
       type="file"
       class="file-input d-none"
       ref="fileInput"
@@ -33,6 +40,7 @@ export default defineComponent({
   setup(props, context) {
     const fileInput = ref<null | HTMLInputElement>(null)
     const fileStatus = ref<UploadStatus>('ready')
+    const uploadedData = ref()
     const trigerUpload = () => {
       if (fileInput.value) {
         fileInput.value.click()
@@ -59,6 +67,7 @@ export default defineComponent({
           })
           .then((resp) => {
             fileStatus.value = 'success'
+            uploadedData.value = resp.data
             context.emit('file-uploaded', resp.data)
           })
           .catch((error) => {
@@ -76,7 +85,8 @@ export default defineComponent({
       fileInput,
       trigerUpload,
       fileStatus,
-      handleFileChange
+      handleFileChange,
+      uploadedData
     }
   }
 })

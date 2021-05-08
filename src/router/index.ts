@@ -5,6 +5,7 @@ import Login from '@/views/Login.vue'
 import Detail from '@/views/ColumnDetail.vue'
 // import Create from '@/views/create.vue'
 import CreatePost from '@/views/CreatePost.vue'
+import axios from '../utils/axios'
 import store from '../store/index'
 
 const routes: Array<RouteRecordRaw> = [
@@ -50,12 +51,34 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // to是即将进入的路由
   // from是即将离开的路由
-  if (to.meta.requiredLogin && !store.state.user.isLogin) {
-    next({ name: 'login' })
-  } else if (to.meta.redirectAlreadyLogin && store.state.user.isLogin) {
-    next({ name: 'Home' })
-  } else {
-    next()
+  const { user, token } = store.state
+  const { requiredLogin, redirectAlreadyLogin } = to.meta
+
+  if (user.isLogin) {
+    if (redirectAlreadyLogin) {
+      next({ name: 'Home' })
+    } else {
+      next()
+    }
+  } else if (token) {
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`
+    store
+      .dispatch('fetchUser')
+      .then(() => {
+        if (redirectAlreadyLogin) {
+          next({ name: 'Home' })
+        } else {
+          next()
+        }
+      })
+      .catch(() => {
+        localStorage.removeItem('token')
+        if (requiredLogin) {
+          next({ name: 'login' })
+        } else {
+          next()
+        }
+      })
   }
 })
 

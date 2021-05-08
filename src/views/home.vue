@@ -5,7 +5,11 @@
       :beforeUpload="checkFileIsJPG"
       @file-uploaded="fileUploaded"
       @file-uploaded-error="fileUploadedError"
-    />
+    >
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" width="500" />
+      </template>
+    </Uploader>
     <ColumnList />
   </div>
 </template>
